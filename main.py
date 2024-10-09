@@ -60,7 +60,6 @@ while True:
                                 target_name = target.name
                                 target.remove()
                                 monitored_groups[i].post(f"{target_name} removed for possible bot spam.")
-                                monitored_groups[i].post("(This was an automated action, email anonchatacc@gmail.com if this was a mistake.)")
                             except:
                                 pass
                         
