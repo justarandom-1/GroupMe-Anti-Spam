@@ -12,6 +12,6 @@ If a message contains the trigger(s) specified on a line in `blacklist.txt`, the
 <p align="center"><img src="images/ban_example.png" height="200px"></img></p>
 
 ### Commands
-*`-ping` will return a message if the bot is online.\
-*`-setup` followed by a valid group invite link will add the bot to the group (if it has not previously been removed from it) and add its ID to `groups.txt`.\
-*`-purge` views all previous messages in a group and bans any current members who previously sent messages detected as spam.\
+* `-ping` will return a message if the bot is online.
+* `-setup` followed by a valid group invite link will add the bot to the group (if it has not previously been removed from it) and add its ID to `groups.txt`.
+* `-purge` views all previous messages in a group and bans any current members who previously sent messages detected as spam.
