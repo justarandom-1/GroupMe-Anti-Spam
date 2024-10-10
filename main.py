@@ -1,6 +1,7 @@
 TOKEN = "TOKEN HERE"
 GROUP_LIST_PATH = "groups.txt"
 BLACKLIST_PATH = "blacklist.txt"
+CONTACT_EMAIL = ""
 
 
 import os
@@ -59,7 +60,8 @@ while True:
                                 target = [member for member in monitored_groups[i].members if member.user_id == m.user_id][0]
                                 target_name = target.name
                                 target.remove()
-                                monitored_groups[i].post(f"{target_name} removed for possible bot spam.")
+                                if CONTACT_EMAIL:
+	                                monitored_groups[i].post(f"(This was an automated action, email {CONTACT_EMAIL} if this was a mistake.)")
                             except:
                                 pass
                         
@@ -72,7 +74,8 @@ while True:
                         target_name = target.name
                         target.remove()
                         monitored_groups[i].post(f"{target_name} removed for possible bot spam.")
-                        monitored_groups[i].post("(This was an automated action, email anonchatacc@gmail.com if this was a mistake.)")
+                        if CONTACT_EMAIL:
+                            monitored_groups[i].post(f"(This was an automated action, email {CONTACT_EMAIL} if this was a mistake.)")
                     except:
                         pass
             break
