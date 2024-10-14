@@ -70,8 +70,9 @@ while True:
                         group.post(f"Joined group \'{client.groups.get(group_data[0]).name}\'")
 
                         open(GROUP_LIST_PATH, "a").write('\n' + str(group_data[0]))
-                        monitored_groups.append(client.groups.get(group_data[0]))
-                        last_messages.append(client.groups.get(group_data[0]).messages.list()[0] )
+                        new_group = client.groups.get(group_data[0])
+                        monitored_groups.append(new_group)
+                        last_messages[group_data[0]] = new_group.messages.list()[0].id
                     except:
                         group.post('Could not join group.')
                 
