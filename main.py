@@ -52,44 +52,47 @@ def check(group, message):
         except:
             pass
 
-print("On")
+print("Bot is on.")
 
 while True:
     time.sleep(5)
     for group in monitored_groups:
-        group.refresh_from_server()
-        new_messages = list(group.messages.list(since_id = last_messages[group.id]))
+        try:
+            group.refresh_from_server()
+            new_messages = list(group.messages.list(since_id = last_messages[group.id]))
+        except:
+            continue
         if new_messages:
             last_messages[group.id] = new_messages[0].id
             for message in new_messages:
+                if message.text:
+                    if message.text.startswith('-setup'):
+                        try:
+                            group_data = message.text[message.text.index('https://groupme.com/join_group/') + 31:].split('/')
+                            client.groups.join(group_data[0], group_data[1])
+                            group.post(f"Joined group \'{client.groups.get(group_data[0]).name}\'")
 
-                if message.text.startswith('-setup'):
-                    try:
-                        group_data = message.text[message.text.index('https://groupme.com/join_group/') + 31:].split('/')
-                        client.groups.join(group_data[0], group_data[1])
-                        group.post(f"Joined group \'{client.groups.get(group_data[0]).name}\'")
+                            open(GROUP_LIST_PATH, "a").write('\n' + str(group_data[0]))
+                            new_group = client.groups.get(group_data[0])
+                            monitored_groups.append(new_group)
+                            last_messages[group_data[0]] = new_group.messages.list()[0].id
+                        except:
+                            group.post('Could not join group.')
 
-                        open(GROUP_LIST_PATH, "a").write('\n' + str(group_data[0]))
-                        new_group = client.groups.get(group_data[0])
-                        monitored_groups.append(new_group)
-                        last_messages[group_data[0]] = new_group.messages.list()[0].id
-                    except:
-                        group.post('Could not join group.')
-                
-                if message.text.startswith('-ping'):
-                    group.post('Bot is online.')
-                    
-                if message.text.startswith('-purge'):
-                    try:
-                        target_group = group
-                        if len(message.text) > 7:
-                            target_group = client.groups.get(message.text[7:])
+                    if message.text.startswith('-ping'):
+                        group.post('Bot is online.')
 
-                        for m in target_group.messages.list():
-                            check(group, m)                        
-                    except:
-                        group.post('Unable to purge.')
+                    if message.text.startswith('-purge'):
+                        try:
+                            target_group = group
+                            if len(message.text) > 7:
+                                target_group = client.groups.get(message.text[7:])
 
-                check(group, message)
+                            for m in target_group.messages.list():
+                                check(group, m)                        
+                        except:
+                            group.post('Unable to purge.')
+
+                    check(group, message)
 
     open(LAST_MESSAGES_PATH, "w").write('\n'.join([f"{id} | {last_messages[id]}" for id in last_messages.keys()]))
